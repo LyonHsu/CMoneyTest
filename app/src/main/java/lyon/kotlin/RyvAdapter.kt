@@ -2,19 +2,16 @@ package lyon.kotlin
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import lyon.kotlin.SecondModel.ImageGetModel
+import lyon.kotlin.Model.ImageGetModel
 import org.json.JSONArray
-import java.io.IOException
+import org.json.JSONObject
 import java.lang.NullPointerException
-import java.net.URL
 
 class RyvAdapter(private var context: Context, private var jsonArray: JSONArray) :
     RecyclerView.Adapter<RyvAdapter.ViewHolder>(){
@@ -24,7 +21,7 @@ class RyvAdapter(private var context: Context, private var jsonArray: JSONArray)
     var itemClick:ItemClick?=null;
 
     interface ItemClick {
-        fun onCLick(v: View, position: Int)
+        fun onCLick(v: View, position: Int, jsonObject:JSONObject)
     }
 
     fun setOnItemClickListener(itemClick: ItemClick) {
@@ -47,7 +44,8 @@ class RyvAdapter(private var context: Context, private var jsonArray: JSONArray)
         holder?.bindModel(position)
         holder.itemView.setOnClickListener {
             if(itemClick!=null){
-                itemClick!!.onCLick(holder.itemView,position)
+                val jsonObject = jsonArray.optJSONObject(position)
+                itemClick!!.onCLick(holder.itemView,position,jsonObject)
             }
         }
     }
@@ -76,10 +74,12 @@ class RyvAdapter(private var context: Context, private var jsonArray: JSONArray)
             idTextView.text="id:"+id
             urlView.text="thumbnailUrl:"+url
 
+
             object :ImageGetModel(){
                 override fun parseBitmap(bitmap: Bitmap?) {
                     try {
-                        imageView.setImageBitmap(bitmap)
+                        if(bitmap!=null)
+                            imageView.setImageBitmap(bitmap)
                     }catch (e:NullPointerException){
                         LogL.e(TAG,"ImageGetModel:"+Tool.FormatStackTrace(e))
                     }

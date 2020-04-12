@@ -1,14 +1,17 @@
 package lyon.kotlin
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_second.*
 import org.json.JSONArray
 import androidx.recyclerview.widget.LinearLayoutManager
-import lyon.kotlin.SecondModel.ViewModel
+import lyon.kotlin.Model.ViewModel
+import org.json.JSONObject
 
-
+val JSON = "json"
 class SecondActivity: AppCompatActivity() {
     val TAG = "SecondActivity"
     lateinit var context: Context
@@ -26,6 +29,14 @@ class SecondActivity: AppCompatActivity() {
         var context = this
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.adapter = ryvAdapter
+        ryvAdapter.setOnItemClickListener(object: RyvAdapter.ItemClick{
+            override fun onCLick(v: View, position: Int,jsonObject: JSONObject) {
+                val intent = Intent(context,ThirdActivity::class.java)
+                intent.putExtra(JSON,jsonObject.toString())
+                startActivity((intent))
+            }
+
+        })
 
         ViewModel(this)
 

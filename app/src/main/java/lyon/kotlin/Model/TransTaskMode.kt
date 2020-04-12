@@ -1,4 +1,4 @@
-package lyon.kotlin.SecondModel
+package lyon.kotlin.Model
 
 import android.os.AsyncTask
 import lyon.kotlin.LogL
