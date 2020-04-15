@@ -43,6 +43,14 @@ class RyvAdapter(private var context: Context, private var jsonArray: JSONArray)
         return  jsonArray?.length() ?:0
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         jsonArray?:return
         holder?.bindModel(position)
@@ -82,17 +90,17 @@ class RyvAdapter(private var context: Context, private var jsonArray: JSONArray)
             titleTextView.text="title:"+title
             idTextView.text="id:"+id
             urlView.text="thumbnailUrl:"+url
-
+            imageView.tag=url
             object : ImageGetModel(context){
-                override fun parseBitmap(bitmap: Bitmap?) {
+                override fun parseBitmap(bitmap: Bitmap?,imageUrl:String) {
                     try {
-                        if(bitmap!=null)
-                            imageView.setImageBitmap(bitmap)
-                        else{
-                            imageView.visibility=View.GONE
-                            webView.visibility=View.VISIBLE
-                            webView.loadUrl(url)
-                        }
+                            if (bitmap != null)
+                                imageView.setImageBitmap(bitmap)
+                            else {
+                                imageView.visibility = View.GONE
+                                webView.visibility = View.VISIBLE
+                                webView.loadUrl(url)
+                            }
                     }catch (e:NullPointerException){
                         LogL.e(TAG,"ImageGetModel:"+ Tool.FormatStackTrace(e))
                     }

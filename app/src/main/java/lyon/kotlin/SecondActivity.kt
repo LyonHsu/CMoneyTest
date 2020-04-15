@@ -41,6 +41,7 @@ class SecondActivity: AppCompatActivity() {
         ryvAdapter = RyvAdapter(this, jsonArray)
         var context = this
         mRecyclerView.setLayoutManager(mLayoutManager);
+        ryvAdapter.setHasStableIds(true);
         mRecyclerView.adapter = ryvAdapter
         ryvAdapter.setOnItemClickListener(object: RyvAdapter.ItemClick{
             override fun onCLick(v: View, position: Int,jsonObject: JSONObject) {
@@ -54,8 +55,10 @@ class SecondActivity: AppCompatActivity() {
         viewModel.onGetResponse(object :ViewModel.GetRespone{
             override fun Respone(jsonArray: JSONArray) {
                 ryvAdapter.setData(jsonArray)
-                progressDialog.setSize(0)
-                progressDialog.dismiss()
+                if(progressDialog!=null) {
+                    progressDialog.setSize(0)
+                    progressDialog.dismiss()
+                }
             }
 
         })

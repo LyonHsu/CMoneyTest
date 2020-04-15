@@ -20,13 +20,14 @@ abstract class ImageGetModel(val context: Context) : AsyncTask<String, Void, Bit
     val TAG = "ImageGetModel"
     val isDebug=true
     val timeOut = 1*1000
+    lateinit var imageUrl:String
     override fun doInBackground(vararg params: String?): Bitmap? {
         try {
             val url = URL(params[0])
             if(isDebug)
                 LogL.d(TAG,"bitmap url:"+url)
             var bitmap: Bitmap? = null
-            var imageUrl = params[0]
+            imageUrl = params[0].toString()
 //            imageUrl = "https://cdn.pixabay.com/photo/2017/09/14/11/07/water-2748640__340.png"
             imageUrl = "http://via.placeholder.com/150/92c952"
             if(isDebug)
@@ -51,10 +52,10 @@ abstract class ImageGetModel(val context: Context) : AsyncTask<String, Void, Bit
     override fun onPostExecute(bitmap: Bitmap?) {
         if(isDebug)
             LogL.d(TAG,"bitmap:$bitmap")
-        parseBitmap(bitmap)
+        parseBitmap(bitmap,imageUrl)
     }
 
-    abstract fun parseBitmap(bitmap: Bitmap?)
+    abstract fun parseBitmap(bitmap: Bitmap?,url:String)
 
     fun downloadImage( imageUrl: String): Bitmap? {
         var bitmap: Bitmap? = null

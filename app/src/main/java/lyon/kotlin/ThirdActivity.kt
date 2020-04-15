@@ -46,7 +46,7 @@ class ThirdActivity: AppCompatActivity() {
 
 
             object : ImageGetModel(this){
-                override fun parseBitmap(bitmap: Bitmap?) {
+                override fun parseBitmap(bitmap: Bitmap?,imageUrl:String) {
                     try {
                         if(bitmap!=null)
                             imageView.setImageBitmap(bitmap)
