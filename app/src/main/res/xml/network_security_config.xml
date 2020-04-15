@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">via.placeholder.com</domain>
+        <pin digest="SHA-256">A6ED85A72E899F89448C0E608D4AD0A541E75EEB88F4BEEC11349BCD53F895BE</pin>
+    </domain-config>
+</network-security-config>

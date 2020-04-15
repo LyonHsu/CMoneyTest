@@ -10,6 +10,7 @@
     <string name="menu_about_me">關於我</string>
     <string name="about_me_sub">這是LyonHsu 使用kotlin製作的【全曜財經】Android APP軟體開發工程師 筆試題目 Android App！</string>
     <string name="btn_name">按鈕</string>
+    <string name="linking">連結中....</string>
     <string name="project_name">
         實作題\n\n
 目標 base API: https://jsonplaceholder.typicode.com, end point: /photos

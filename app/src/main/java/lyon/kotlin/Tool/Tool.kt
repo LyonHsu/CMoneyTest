@@ -1,10 +1,8 @@
-package lyon.kotlin
+package lyon.kotlin.Tool
 
 import android.util.Log
-import java.io.IOException
-import java.io.PrintWriter
-import java.io.StringWriter
-import java.io.Writer
+import java.io.*
+
 
 object Tool{
     val TAG = "Tool"
@@ -37,5 +35,18 @@ object Tool{
             }
         }
         return max;
+    }
+
+    fun CopyStream(inputStream: InputStream, os: OutputStream) {
+        val buffer_size = 1024
+        try {
+            val bytes = ByteArray(buffer_size)
+            while (true) {
+                val count: Int = inputStream.read(bytes, 0, buffer_size)
+                if (count == -1) break
+                os.write(bytes, 0, count)
+            }
+        } catch (ex: java.lang.Exception) {
+        }
     }
 }

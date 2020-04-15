@@ -1,16 +1,12 @@
-package lyon.kotlin
+package lyon.kotlin.Tool
 
 
-import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSocketFactory
-import javax.net.ssl.X509TrustManager
-
-
-import java.security.cert.CertificateException
-import java.security.cert.X509Certificate
+import java.io.IOException
+import java.io.InputStream
+import java.security.KeyStore
+import java.security.cert.CertificateFactory
 import javax.net.ssl.*
-import javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier
-import javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory
+
 
 object SSL {
     val TAG ="SSL"
@@ -21,6 +17,7 @@ object SSL {
     @Throws(Exception::class)
     fun igoreVerify() {
         ignoreVerifyHttpsHostName()
+        ignoreVerifyHttpsTrustManager()
     }
     /**
      * 忽略驗證https
@@ -34,7 +31,6 @@ object SSL {
             }
 
         }
-
         HttpsURLConnection.setDefaultHostnameVerifier(hv)
     }
 
@@ -42,7 +38,22 @@ object SSL {
      * 忽略驗證https
      */
     @Throws(Exception::class)
-    fun ignoreVerifyHttpsTrustManager() :SSLContext{
+    fun ignoreVerifyHttpsTrustManager(vararg certificates: InputStream) :SSLSocketFactory{
+        val certificateFactory: CertificateFactory = CertificateFactory.getInstance("X.509")
+        var keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        keyStore.load(null)
+        var index = 0
+        for ( certificate in certificates){
+            val certificateAlias = Integer.toString(index++)
+            keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
+            try{
+                if (certificate != null)
+                    certificate.close();
+            } catch ( e: IOException){
+                e.printStackTrace() ;
+            }
+        }
+
         val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
             override fun getAcceptedIssuers(): Array<java.security.cert.X509Certificate>? {
                 return null
@@ -60,11 +71,12 @@ object SSL {
             ) {
             }
         })
-
+        //取得SSL的SSLContext实例
         val sc = SSLContext.getInstance("TLS")
         sc.init(null, trustAllCerts, java.security.SecureRandom())
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
-        return sc
+//        HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
+
+        return sc.socketFactory
     }
 
 

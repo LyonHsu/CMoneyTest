@@ -1,9 +1,10 @@
 package lyon.kotlin.Model
 
 import android.os.AsyncTask
-import lyon.kotlin.LogL
-import lyon.kotlin.Tool
+import lyon.kotlin.Tool.LogL
+import lyon.kotlin.Tool.Tool
 import org.json.JSONArray
+import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -17,15 +18,20 @@ abstract class  TransTaskMode : AsyncTask<String, Void, String>() {
         val sb = StringBuilder()
         try {
             val url = URL(params[0])
-            val `in` = BufferedReader(
-                InputStreamReader(url.openStream())
-            )
-            var line = `in`.readLine()
+            var inputStreamReader = InputStreamReader(url.openStream())
+
+            LogL.d(TAG,"inputStreamReader:"+inputStreamReader.hashCode())
+            val bufferedReader = BufferedReader(inputStreamReader)
+            var line = bufferedReader.readLine()
+            LogL.d(TAG,"bufferedReader size:"+bufferedReader)
+            var total = 0
             while (line != null) {
                 if(isDebug)
                     LogL.d(TAG + "HTTP", line)
                 sb.append(line)
-                line = `in`.readLine()
+                getPackageSize(sb.length)
+                line = bufferedReader.readLine()
+
             }
         } catch (e: MalformedURLException) {
             LogL.e(TAG, Tool.FormatStackTrace(e) ?: "")
@@ -40,10 +46,16 @@ abstract class  TransTaskMode : AsyncTask<String, Void, String>() {
         super.onPostExecute(s)
         if(isDebug)
             LogL.d("JSON", s)
-        var jsonArray:JSONArray= JSONArray(s)
-        parseJSON(jsonArray)
+        try {
+            var jsonArray: JSONArray = JSONArray(s)
+            parseJSON(jsonArray)
+        }catch (e:JSONException){
+            LogL.e(TAG,"onPostExecute:"+ Tool.FormatStackTrace(e))
+        }
     }
 
     abstract fun parseJSON(jsonArray: JSONArray)
+
+    abstract fun getPackageSize( size:Int)
 
 }

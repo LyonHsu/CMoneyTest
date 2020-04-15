@@ -6,4 +6,6 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="second_cell_hight">150dp</dimen>
+    <dimen name="WIDTH">150dp</dimen>
+    <dimen name="HEIGHT">150dp</dimen>
 </resources>

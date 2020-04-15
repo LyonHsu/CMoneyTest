@@ -1,5 +1,5 @@
-package lyon.kotlin
-import android.util.Log
+package lyon.kotlin.Tool
+
 object LogL{
     val isDebug=true
     fun e(TAG:String, msg:String){
